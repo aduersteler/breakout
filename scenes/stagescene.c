@@ -1,24 +1,26 @@
 #include "stagescene.h"
 
-ALLEGRO_DISPLAY *display;
-int displayWidth;
-bool *doexit_ref;
-Obstacle obstacles[200];
+static ALLEGRO_DISPLAY *display;
+static ALLEGRO_BITMAP *backgroundImage = NULL;
+static int displayWidth;
+static int displayHeight;
+static bool *doexit;
+static Obstacle obstacles[157]; // todo: 157 need to be dynamic
 
 void stagescene_init(ALLEGRO_DISPLAY *_display, bool *_doexit) {
   printf("stagescene_init\n");
 
   display = _display;
-  doexit_ref = _doexit;
+  doexit = _doexit;
   displayWidth = al_get_display_width(display);
+  displayHeight = al_get_display_height(display);
   stagescene_loadFile("map1.txt");
-  al_clear_to_color(al_map_rgb(255,0,0));
-  stagescene_drawBricks();
-  al_flip_display();
+  stagescene_initBackground();
 }
 
 void stagescene_destroy() {
   printf("stagescene_destroy\n");
+  al_destroy_bitmap(backgroundImage);
 }
 
 void stagescene_handleEvents(ALLEGRO_EVENT ev) {
@@ -32,32 +34,75 @@ void stagescene_handleEvents(ALLEGRO_EVENT ev) {
   }
 }
 
+void stagescene_initBackground() {
+  al_set_new_bitmap_flags(ALLEGRO_MAG_LINEAR);
+  char buffer[100];
+  sprintf(buffer,"%s/%s",al_get_current_directory(),"background.png");
+
+  backgroundImage = al_load_bitmap(buffer);
+}
+
 void stagescene_tick() {
-  // al_clear_to_color(al_map_rgb(255,0,0));
-  // stagescene_drawBricks();
-  // al_flip_display();
+  stagescene_drawBackground();
+  stagescene_drawBricks();
+  al_flip_display();
+}
+
+void stagescene_drawBackground() {
+  
+  // al_clear_to_color(al_map_rgb(0,0,0));
+
+  al_draw_scaled_bitmap(
+    backgroundImage,
+    0, 
+    0, 
+    600, 
+    375,
+    0, 
+    0, 
+    displayWidth, 
+    displayHeight, 
+    0);
+
+}
+
+ALLEGRO_COLOR getBrickColor(Obstacle obstacle) {
+  ALLEGRO_COLOR color;
+  switch(obstacle.color) {
+    case 'r':
+      color = al_map_rgb(255,0,0);
+      break;
+    case 'y':
+      color = al_map_rgb(255,255,0);
+      break;
+    case 'b':
+      color = al_map_rgb(0,0,255);
+      break;
+    case 'g':
+      color = al_map_rgb(0,255,0);
+      break;
+    default:
+      color = al_map_rgb(144,144,144);
+  }
+  return color;
 }
 
 void stagescene_drawBrick(Obstacle obstacle) {
 
   ALLEGRO_COLOR color;
-  ALLEGRO_COLOR ButtonBackground = al_map_rgb(180, 180, 180);
 
-  int offsetX = 20;
-  int width = 40;
-  int height = 40;
-  int x = offsetX+(obstacle.x*50);
-  int y = obstacle.y*50;
+  color = getBrickColor(obstacle);
+
+  int offsetX = 120*SCREEN_RATIO;
+  int offsetY = 20*SCREEN_RATIO;
+  int width = 50*SCREEN_RATIO;
+  int height = 25*SCREEN_RATIO;
+  int margin = 4*SCREEN_RATIO;
+  int x = offsetX+(obstacle.x*(width+margin));
+  int y = offsetY+(obstacle.y*(height+margin));
   
-
   // Background
-  color = ButtonBackground;
   al_draw_filled_rectangle(x,y, x+width, y+height, color);
-
-  // printf("x: %d, y: %d, w: %d, h: %d \n", obstacle.x, obstacle.y, 25, 5);
-  // // Border
-  // color = al_map_rgb(0, 255, 0);
-  // al_draw_rectangle(rectX, rectY, rectX+rectWidth, rectHeight+rectY, color,2.0);
 }
 
 void stagescene_drawBricks() {
@@ -67,25 +112,29 @@ void stagescene_drawBricks() {
 }
 
 void stagescene_loadFile(char* filename) {
-  int c;
+  char c;
   FILE *file;
   file = fopen("map1.txt", "r");
   int x = 0;
   int y = 0;
-  int index = 0;
+  int index = 1;
 
 
   if (file) {
     while ((c = getc(file)) != EOF) {
-      obstacles[index].color = 1;
-      obstacles[index].x = x;
-      obstacles[index].y = y;
-      x++;
-      index++;
-      if(c == '\n') {
-        y++;
-        x=0;
+      if(c == 'r' || c == 'y' || c == 'g' || c == 'b') {
+        obstacles[index].color = c;
+        obstacles[index].x = x;
+        obstacles[index].y = y;
+        x++;
+        index++;
       }
+      else if('\n'){
+        x=0;
+        y++;
+      }
+      
+      
       
     }
     fclose(file);

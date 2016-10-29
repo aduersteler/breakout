@@ -1,8 +1,8 @@
 #include "scenecontroller.h"
 
-int currentScene;
-ALLEGRO_DISPLAY *display = NULL;
-bool *doexit;
+static int currentScene;
+static ALLEGRO_DISPLAY *display = NULL;
+static bool *doexit;
 
 void scenecontroller_init(ALLEGRO_DISPLAY *_display, bool *_doexit) {
   display = _display;

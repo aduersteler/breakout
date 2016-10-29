@@ -13,15 +13,18 @@
   typedef struct {
     int x;
     int y;
-    int color;
-  }Obstacle;
+    char color;
+  } Obstacle;
 
   void stagescene_init(ALLEGRO_DISPLAY *_display, bool *_doexit);
+  void stagescene_initBackground();
   void stagescene_tick();
   void stagescene_loadFile(char* filename);
+  void stagescene_drawBackground();
   void stagescene_drawBricks();
   void stagescene_drawBrick(Obstacle obstacle);
   void stagescene_destroy();
   void stagescene_handleEvents(ALLEGRO_EVENT ev);
+  ALLEGRO_COLOR getBrickColor(Obstacle obstacle);
 
 #endif

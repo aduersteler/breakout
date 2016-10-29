@@ -16,4 +16,5 @@
   void infoscene_drawText();
   void infoscene_destroy();
   void infoscene_handleEvents(ALLEGRO_EVENT ev);
+  
 #endif

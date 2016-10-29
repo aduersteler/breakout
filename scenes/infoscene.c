@@ -1,9 +1,9 @@
 #include "infoscene.h"
 
-ALLEGRO_DISPLAY *display;
-ALLEGRO_FONT *textFont;
-int displayWidth;
-bool *doexit_ref;
+static ALLEGRO_DISPLAY *display;
+static ALLEGRO_FONT *textFont;
+static int displayWidth;
+static bool *doexit_ref;
 
 void infoscene_init(ALLEGRO_DISPLAY *_display, bool *_doexit) {
   printf("infoscene_init\n");
@@ -49,10 +49,11 @@ void infoscene_drawText() {
   ALLEGRO_COLOR color;
   int middle = displayWidth/2;
   int offset = 100;
+  int margin = 30;
 
   color = al_map_rgb(255, 255, 255);
   al_clear_to_color(al_map_rgb(0,0,0));
-  al_draw_text(textFont, color, middle, 0+offset*SCREEN_RATIO, 1, "Breakout Game by");
-  al_draw_text(textFont, color, middle, 50+offset*SCREEN_RATIO, 1, "Albrik Dürsteler & Erik Amgwerd");
-  al_draw_text(textFont, color, middle, 100+offset*SCREEN_RATIO, 1, "2016");
+  al_draw_text(textFont, color, middle, (0*margin+offset)*SCREEN_RATIO, 1, "Breakout Game by");
+  al_draw_text(textFont, color, middle, (1*margin+offset)*SCREEN_RATIO, 1, "Albrik Dürsteler & Erik Amgwerd");
+  al_draw_text(textFont, color, middle, (2*margin+offset)*SCREEN_RATIO, 1, "2016");
 }

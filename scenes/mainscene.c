@@ -1,13 +1,13 @@
 #include "mainscene.h"
 
-ALLEGRO_DISPLAY *display;
-ALLEGRO_FONT *titleFont;
-ALLEGRO_FONT *buttonFont;
-ALLEGRO_BITMAP *backgroundImage = NULL;
-int selected = 0;
-bool *doexit;
+static ALLEGRO_DISPLAY *display;
+static ALLEGRO_FONT *titleFont;
+static ALLEGRO_FONT *buttonFont;
+static ALLEGRO_BITMAP *backgroundImage = NULL;
+static int selected = 0;
+static bool *doexit;
 
-struct Scene scenes[] = {
+Scene scenes[] = {
   {.text="New Game",.index=0,.scene=SCENE_GAME},
   {.text="Info",.index=1,.scene=SCENE_INFO},
   {.text="Quit",.index=2,.scene=SCENE_QUIT},

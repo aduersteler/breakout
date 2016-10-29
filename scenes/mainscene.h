@@ -11,11 +11,11 @@
   #include "../constants.h"
   #include "../scenecontroller.h"
 
-  struct Scene{
+  typedef struct {
     char *text;
     int index;
     int scene;
-  };
+  } Scene;
 
   void mainscene_init(ALLEGRO_DISPLAY *display,bool *_doexit);
   void mainscene_tick();
@@ -40,4 +40,5 @@
   void mainscene_drawNavigation();
   void mainscene_drawBackground();
   void mainscene_drawTitle();
+  
 #endif

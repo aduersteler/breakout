@@ -5,7 +5,6 @@ clear
 # Static Linking
 
 gcc \
--mmacosx-version-min=10.10 \
 -Wall \
 -flto \
 -Os \
