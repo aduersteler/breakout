@@ -26,18 +26,21 @@ void scenecontroller_openScene(int scene) {
 }
 
 void scenecontroller_closeCurrentScene() {
-  currentScene = 0;
   switch(currentScene) {
     case SCENE_MAIN:
+      currentScene = 0;
       mainscene_destroy();
       break;
     case SCENE_INFO:
+      currentScene = 0;
       infoscene_destroy();
       break;
     case SCENE_GAME:
+      currentScene = 0;
       stagescene_destroy();
       break;
   }
+
 }
 
 void scenecontroller_quit() {
