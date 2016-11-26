@@ -16,7 +16,7 @@ Scene scenes[] = {
 void mainscene_init(ALLEGRO_DISPLAY *_display, bool *_doexit) {
   display = _display;
   doexit = _doexit;
-
+  
   mainscene_initBackground();
   mainscene_initTitle();
   mainscene_initNavigation();
@@ -109,7 +109,7 @@ void mainscene_initNavigation() {
 void mainscene_drawBackground() {
   int displayWidth = al_get_display_width(display);
   int displayHeight = al_get_display_height(display);
-  al_clear_to_color(al_map_rgb(0,0,0));
+  // al_clear_to_color(al_map_rgb(0,0,0));
 
   al_draw_scaled_bitmap(
     backgroundImage,

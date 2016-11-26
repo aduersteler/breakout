@@ -4,6 +4,30 @@
 		"selected_items":
 		[
 			[
+				"de",
+				"dein_int"
+			],
+			[
+				"mein",
+				"mein_int"
+			],
+			[
+				"di",
+				"directionY"
+			],
+			[
+				"disp",
+				"displayHeight"
+			],
+			[
+				"display",
+				"displayWidth"
+			],
+			[
+				"directio",
+				"directionY"
+			],
+			[
 				"scene",
 				"scenecontroller_quit"
 			],
@@ -43,12 +67,20 @@
 	"build_varint": "",
 	"command_palette":
 	{
-		"height": 313.0,
-		"last_filter": "",
+		"height": 247.0,
+		"last_filter": "plain",
 		"selected_items":
 		[
+			[
+				"plain",
+				"Set Syntax: Plain Text"
+			],
+			[
+				"syntax c",
+				"Set Syntax: C"
+			]
 		],
-		"width": 516.0
+		"width": 530.0
 	},
 	"console":
 	{
@@ -68,11 +100,25 @@
 	},
 	"expanded_folders":
 	[
-		"/Users/albrik/game",
-		"/Users/albrik/game/scenes"
+		"/Users/albrik/projects/breakout",
+		"/Users/albrik/projects/breakout/scenes"
 	],
 	"file_history":
 	[
+		"/Users/albrik/projects/breakout/scenes/stagescene.h",
+		"/Users/albrik/projects/breakout/scenecontroller.c",
+		"/Users/albrik/projects/breakout/scenes/mainscene.c",
+		"/Users/albrik/projects/breakout/constants.h",
+		"/Users/albrik/projects/breakout/build",
+		"/Users/albrik/projects/breakout/main.c",
+		"/Users/albrik/projects/breakout/scenes/stagescene.c",
+		"/Users/albrik/projects/breakout/map2.txt",
+		"/Users/albrik/projects/breakout/scenecontroller.h",
+		"/Users/albrik/projects/breakout/map1.txt",
+		"/Users/albrik/Desktop/int.c",
+		"/Users/albrik/Desktop/main.c",
+		"/Users/albrik/projects/breakout/game",
+		"/Users/albrik/projects/breakout/background.png",
 		"/Users/albrik/game/build",
 		"/Users/albrik/game/scenes/stagescene.c",
 		"/Applications/Adobe Acrobat DC/Adobe Acrobat.app/Contents/Plugins/SaveAsXML.acroplugin/Contents/Resources/de.lproj/Primary.zbin",
@@ -99,7 +145,7 @@
 	],
 	"find":
 	{
-		"height": 40.0
+		"height": 35.0
 	},
 	"find_in_files":
 	{
@@ -113,6 +159,66 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"map",
+			"audio",
+			"al_get_current_directory",
+			"jpg",
+			"b",
+			"r",
+			"y",
+			"line",
+			"backgr",
+			"line",
+			"getBrickColor",
+			"drawbr",
+			"stagescene_drawBar",
+			"enabled",
+			"drawbric",
+			"brick.",
+			"obstacle",
+			"stagescene_drawBrick",
+			"drawbr",
+			"getBrickColor",
+			"drawbri",
+			"stagescene_initBackground",
+			"backgr",
+			"al_flip_display",
+			"draw",
+			"round",
+			"tick",
+			"scenecontroller_tick",
+			"mainscene_tick",
+			"stagescene_updateBall",
+			"drawba",
+			"mainscene_initBackground",
+			"stagescene_drawBackground",
+			"background",
+			"stagescene_tick",
+			"bar.y",
+			"stagescene_drawBrick",
+			"drawbric",
+			"stagescene_drawBrick",
+			"stagescene_drawBricks",
+			"obstacle",
+			"updateba",
+			"stagescene_drawBall",
+			"brick",
+			"initbar",
+			"backgr",
+			"flip",
+			"stagescene_drawBrick",
+			"stagescene_drawBricks",
+			"stagescene_updateBar",
+			"backgroundImage",
+			"stagescene_drawBackground",
+			"image",
+			"al_set_new_display_option",
+			"rende",
+			"tic",
+			"direction",
+			"stagescene_drawBall",
+			"ball",
+			"stagescene_drawBar",
 			"albrik",
 			"backgr",
 			"helpe",
@@ -173,6 +279,9 @@
 		"regex": false,
 		"replace_history":
 		[
+			"g",
+			"brick->",
+			"bar.directionX",
 			"doexit",
 			"textFont"
 		],
@@ -192,7 +301,7 @@
 	],
 	"incremental_find":
 	{
-		"height": 30.0
+		"height": 25.0
 	},
 	"input":
 	{
@@ -233,7 +342,7 @@
 	"project": "game.sublime-project",
 	"replace":
 	{
-		"height": 72.0
+		"height": 64.0
 	},
 	"save_all_on_build": true,
 	"select_file":

@@ -24,19 +24,24 @@ scenes/stagescene.c \
 -o game \
 -framework CoreFoundation \
 -framework CoreGraphics \
+-framework CoreAudio \
 -framework CoreServices \
 -framework ApplicationServices \
 -framework IOKit \
 -framework AppKit \
+-framework AudioToolbox \
+-framework OpenAL \
 -framework OpenGL \
 `pkg-config --libs --cflags \
 allegro_font-static-5 \
 allegro_ttf-static-5 \
 allegro_image-static-5 \
 allegro_primitives-static-5 \
+allegro_audio-static-5 \
+allegro_acodec-static-5 \
 allegro_main-static-5 \
 allegro-static-5` \
-`pkg-config --libs freetype2 --cflags --static`
+`pkg-config --libs freetype2 vorbis vorbisfile ogg flac opus opusfile --cflags --static`
 
 
 # Dynamic Linking

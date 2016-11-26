@@ -4,6 +4,8 @@
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_ttf.h>
 #include <allegro5/allegro_image.h>
+#include <allegro5/allegro_audio.h>
+#include <allegro5/allegro_acodec.h>
 #include "constants.h"
 #include "scenes/mainscene.h"
 #include "scenes/infoscene.h"
@@ -15,10 +17,9 @@ int main(int argc, char **argv){
     ALLEGRO_DISPLAY *display = NULL;
     ALLEGRO_EVENT_QUEUE *event_queue = NULL;
     ALLEGRO_TIMER *timer = NULL;
- 
-    int screenRatio = SCREEN_RATIO;
-    int screenWidth = SCREEN_WIDTH*screenRatio;
-    int screenHeight = SCREEN_HEIGHT*screenRatio;
+    
+    int screenWidth = SCREEN_WIDTH*SCREEN_RATIO;
+    int screenHeight = SCREEN_HEIGHT*SCREEN_RATIO;
 
     bool doexit = false;
      
@@ -28,6 +29,7 @@ int main(int argc, char **argv){
     }
 
     timer = al_create_timer(1.0 / FPS);
+
     if(!timer) {
       fprintf(stderr, "failed to create timer!\n");
       return -1;
@@ -40,6 +42,8 @@ int main(int argc, char **argv){
       return -1;
     }
 
+    al_set_new_display_option(ALLEGRO_VSYNC, ALLEGRO_REQUIRE, 0);
+
     event_queue = al_create_event_queue();
     if(!event_queue) {
       fprintf(stderr, "failed to create event_queue!\n");
@@ -47,10 +51,19 @@ int main(int argc, char **argv){
       return -1;
     }
 
+
+
     al_register_event_source(event_queue, al_get_display_event_source(display));
 
     // addons
     al_install_keyboard();
+    if(!al_install_audio()){
+      fprintf(stderr, "failed to initialize audio!\n");
+      return -1;
+    }
+    if (!al_init_acodec_addon()) {
+        return -1;
+    }
     al_init_font_addon();
     al_init_ttf_addon();
     al_init_primitives_addon();
