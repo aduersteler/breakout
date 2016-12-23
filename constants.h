@@ -3,7 +3,7 @@
   #define __CONTSTANTS_H__
   #define SCREEN_WIDTH 1024
   #define SCREEN_HEIGHT 768
-  #define SCREEN_RATIO 1
+  #define SCREEN_RATIO 2
   #define FPS 60
 
   enum SceneType {

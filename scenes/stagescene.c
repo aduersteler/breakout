@@ -10,6 +10,8 @@ static Obstacle obstacles[157]; // todo: 157 need to be dynamic
 static Bar bar = {.width=100, .height=25, .directionX=0};
 static Ball ball = {.width=25, .height=25, .directionX=1, .directionY=1};
 static ALLEGRO_SAMPLE *sample=NULL;
+static ALLEGRO_FONT *textFont;
+static int gameOver = 0;
 
 void stagescene_init(ALLEGRO_DISPLAY *_display, bool *_doexit) {
   printf("stagescene_init\n");
@@ -18,17 +20,25 @@ void stagescene_init(ALLEGRO_DISPLAY *_display, bool *_doexit) {
   doexit = _doexit;
   displayWidth = al_get_display_width(display);
   displayHeight = al_get_display_height(display);
-  
   char buffer[200];
+    
   sprintf(buffer,"%s/%s",al_get_current_directory(),"audio.ogg");
 
+  stagescene_initText();
   sample = al_load_sample(buffer);
   al_reserve_samples(1);
   stagescene_loadFile("map1.txt");
   stagescene_initBackground();
   stagescene_initBar();
-  ball.y = displayHeight-100;
+
+  ball.y = (displayHeight/SCREEN_RATIO)-150*SCREEN_RATIO;
   ball.x = bar.x;
+
+  // init values
+  gameOver = 0;
+  bar.directionX=0;
+  ball.directionY=1;
+  ball.directionX=1;
 }
 
 void stagescene_initBar() {
@@ -63,6 +73,12 @@ void stagescene_handleEvents(ALLEGRO_EVENT ev) {
         scenecontroller_closeCurrentScene();
         scenecontroller_openScene(SCENE_MAIN);
         break;
+      case ALLEGRO_KEY_ENTER:
+        if(gameOver) {
+          scenecontroller_closeCurrentScene();
+          scenecontroller_openScene(SCENE_MAIN);
+        }
+        break;
     }
   }
 }
@@ -73,6 +89,12 @@ void stagescene_initBackground() {
   sprintf(buffer,"%s/%s",al_get_current_directory(),"background.png");
 
   backgroundImage = al_load_bitmap(buffer);
+}
+
+void stagescene_initText() {
+  char buffer[100];
+  sprintf(buffer,"%s/%s",al_get_current_directory(),"Arkitech_Light.ttf");
+  textFont = al_load_font(buffer, 24*SCREEN_RATIO, 1);
 }
 
 void stagescene_drawBall() {
@@ -118,31 +140,53 @@ void stagescene_updateBar() {
   }
 }
 
+
+
+void stagescene_drawGameOverText() {
+  ALLEGRO_COLOR color;
+  int middle = displayWidth/2;
+  int offset = 100;
+  int margin = 30;
+
+  color = al_map_rgb(255, 255, 255);
+  al_clear_to_color(al_map_rgb(0,0,0));
+  al_draw_text(textFont, color, middle, (0*margin+offset)*SCREEN_RATIO, 1, "Game Over");
+}
+
 void stagescene_updateBall() {
   double moveSpeed = ((1.0/FPS)*300);
 
   // BoundingCollision
+
+  // top bounding
   if(ball.y <= 0) {
     ball.directionY = 1;
-    playSound();
+    stagescene_playSound();
   }
+
+  // bottom bounding
   if(ball.y >= (displayHeight/SCREEN_RATIO)-ball.height) {
-    ball.directionY = -1;
-    playSound();
+    // ball.directionY = -1;
+    gameOver = 1;
+    
   }
+
+  // left bounding
   if(ball.x <= 0) {
     ball.directionX = 1;
-    playSound();
+    stagescene_playSound();
   }
+
+  //right bounding
   if(ball.x >= (displayWidth/SCREEN_RATIO)-ball.width) {
     ball.directionX = -1;
-    playSound();
+    stagescene_playSound();
   }
 
   // Bar Collision
   if(ball.y+ball.height >= bar.y && (ball.x+ball.width) >= bar.x && ball.x < (bar.x + bar.width)) {
     ball.directionY = -1;
-    playSound();
+    stagescene_playSound();
   }
 
   // Obstacle Collision
@@ -156,56 +200,58 @@ void stagescene_updateBall() {
       if( (ball.y <= brick->y+brick->height && ball.y >= brick->y && ball.x <= brick->x+brick->width && ball.x+ball.width >= brick->x) ) {
         ball.directionY = 1;
         brick->enabled = false;
-        playSound();
+        stagescene_playSound();
       }
 
       // collision on top
       if( (ball.y+ball.height > brick->y && ball.y+ball.height < brick->y+brick->height && ball.x < brick->x+brick->width && ball.x+ball.width > brick->x) ) {
         ball.directionY = -1;
         brick->enabled = false;
-        playSound();
+        stagescene_playSound();
       }
 
       // collision on left
       if( (ball.y <= brick->y+brick->height && ball.y >= brick->y && ball.x+ball.width >= brick->x && ball.x <= brick->x) ) {
         ball.directionX = -1;
         brick->enabled = false;
-        playSound();
+        stagescene_playSound();
       }
 
       // collision on right
       if( (ball.y < brick->y+brick->height && ball.y > brick->y && ball.x < brick->x+brick->width && ball.x+ball.width > brick->x+brick->width) ) {
         ball.directionX = 1;
         brick->enabled = false;
-        playSound();
+        stagescene_playSound();
       } 
     }
 
-    
-
-    
-
-
-
-
-    
   }
 
   ball.x = (double) ball.x+moveSpeed*ball.directionX;
   ball.y = (double) ball.y+moveSpeed*ball.directionY;
 }
 
-void playSound() {
+void stagescene_playSound() {
   al_play_sample(sample, 1.0, 0.0,1.0,ALLEGRO_PLAYMODE_ONCE,0);
 }
 
 void stagescene_tick() {
-  stagescene_updateBar();
-  stagescene_updateBall();
+
+  
+  if(!gameOver) {
+    stagescene_updateBar();
+    stagescene_updateBall();
+  }
+  
   stagescene_drawBackground();
   stagescene_drawBricks();
   stagescene_drawBar();
   stagescene_drawBall();
+
+  if(gameOver) {
+    stagescene_drawGameOverText();
+  } 
+
   al_flip_display();
 }
 

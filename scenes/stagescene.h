@@ -43,8 +43,10 @@
   void stagescene_init(ALLEGRO_DISPLAY *_display, bool *_doexit);
   void stagescene_initBar();
   void stagescene_initBackground();
+  void stagescene_initText();
   void stagescene_updateBar();
-  void playSound();
+  void stagescene_playSound();
+  void stagescene_drawGameOverText();
   void stagescene_updateBall();
   void stagescene_logic_tick();
   void stagescene_tick();
