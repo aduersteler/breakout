@@ -1,18 +1,31 @@
+/*
+  Main Scene contains the main menu controlled by keyboard
+*/
+
 #include "mainscene.h"
 
 static ALLEGRO_DISPLAY *display;
 static ALLEGRO_FONT *titleFont;
 static ALLEGRO_FONT *buttonFont;
 static ALLEGRO_BITMAP *backgroundImage = NULL;
+
+// current selected navigation entry
 static int selected = 0;
+
+// doexit reference from main.c
 static bool *doexit;
 
-Scene scenes[] = {
+// array of navigation entries
+static Scene scenes[] = {
   {.text="New Game",.index=0,.scene=SCENE_GAME},
   {.text="Info",.index=1,.scene=SCENE_INFO},
   {.text="Quit",.index=2,.scene=SCENE_QUIT},
 };
 
+/*
+  main function called by scenecontroller.c.
+  prepares the required objects.
+*/
 void mainscene_init(ALLEGRO_DISPLAY *_display, bool *_doexit) {
   display = _display;
   doexit = _doexit;
@@ -22,13 +35,18 @@ void mainscene_init(ALLEGRO_DISPLAY *_display, bool *_doexit) {
   mainscene_initNavigation();
 }
 
+/*
+  frees allegro objects memory
+*/
 void mainscene_destroy() {
-  printf("mainscene_destroy\n");
   al_destroy_bitmap(backgroundImage);
   al_destroy_font(titleFont);
   al_destroy_font(buttonFont);
 }
 
+/*
+  tick called by scenecontroller.c. redraw function.
+*/
 void mainscene_tick() {
   mainscene_drawBackground();
   mainscene_drawTitle();
@@ -36,6 +54,10 @@ void mainscene_tick() {
   al_flip_display();
 }
 
+/*
+  called on key pressed down. 
+  increase navigation selection index.
+*/
 void mainscene_moveDown() {
   if(selected == 2) {
     selected=0;
@@ -44,6 +66,11 @@ void mainscene_moveDown() {
   }
   
 }
+
+/*
+  called on key pressed up. 
+  decrease navigation selection index.
+*/
 void mainscene_moveUp() {
   if(selected == 0) {
     selected=2;
@@ -52,6 +79,10 @@ void mainscene_moveUp() {
   }
 }
 
+/*
+  called on key enter pressed. 
+  open scene of selected scene
+*/
 void mainscene_activateButton() {
   switch(scenes[selected].scene) {
     case SCENE_QUIT:
@@ -66,6 +97,9 @@ void mainscene_activateButton() {
   }
 }
 
+/*
+  gets forwarded events from scenecontroller.c. 
+*/
 void mainscene_handleEvents(ALLEGRO_EVENT ev) {
 
   if(ev.type == ALLEGRO_EVENT_KEY_UP) {
@@ -86,6 +120,9 @@ void mainscene_handleEvents(ALLEGRO_EVENT ev) {
   }
 }
 
+/*
+  init background drawing objects
+*/
 void mainscene_initBackground() {
   al_set_new_bitmap_flags(ALLEGRO_MAG_LINEAR);
   char buffer[100];
@@ -94,22 +131,30 @@ void mainscene_initBackground() {
   backgroundImage = al_load_bitmap(buffer);
 }
 
+/*
+  init title drawing objects
+*/
 void mainscene_initTitle() {
   char buffer[100];
   sprintf(buffer,"%s/%s",al_get_current_directory(),"Arkitech_Light.ttf");
   titleFont = al_load_font(buffer, 50*SCREEN_RATIO, 1);
 }
 
+/*
+  init navigation drawing objects
+*/
 void mainscene_initNavigation() {
   char buffer[100];
   sprintf(buffer,"%s/%s",al_get_current_directory(),"Arkitech_Light.ttf");
   buttonFont = al_load_font(buffer, 30*SCREEN_RATIO, 1);
 }
 
+/*
+  draw background with prepared draw objects
+*/
 void mainscene_drawBackground() {
   int displayWidth = al_get_display_width(display);
   int displayHeight = al_get_display_height(display);
-  // al_clear_to_color(al_map_rgb(0,0,0));
 
   al_draw_scaled_bitmap(
     backgroundImage,
@@ -125,6 +170,9 @@ void mainscene_drawBackground() {
 
 }
 
+/*
+  draw title with prepared draw objects
+*/
 void mainscene_drawTitle() {
   ALLEGRO_COLOR color;
   int displayWidth = al_get_display_width(display);
@@ -133,6 +181,9 @@ void mainscene_drawTitle() {
   al_draw_text(titleFont, color, middle, 50*SCREEN_RATIO, 1, "Breakout");
 }
 
+/*
+  draw a button
+*/
 void mainscene_drawButton(
   int rectX, 
   int rectY, 
@@ -166,6 +217,9 @@ void mainscene_drawButton(
   al_draw_text(buttonFont, color, rectX+(rectWidth/2), rectY+padding, 1, text); 
 }
 
+/*
+  draw navigation with buttons
+*/
 void mainscene_drawNavigation() {
   int ratio = SCREEN_RATIO;
   int rectX = 0*ratio;

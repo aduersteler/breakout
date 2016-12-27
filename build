@@ -20,7 +20,7 @@ main.c \
 scenecontroller.c \
 scenes/mainscene.c \
 scenes/infoscene.c \
-scenes/stagescene.c \
+scenes/gamescene.c \
 -o game \
 -framework CoreFoundation \
 -framework CoreGraphics \
@@ -52,7 +52,7 @@ allegro-static-5` \
 # scenecontroller.c \
 # scenes/mainscene.c \
 # scenes/infoscene.c \
-# scenes/stagescene.c \
+# scenes/gamescene.c \
 # -o game \
 # -g -framework CoreFoundation \
 # -framework CoreGraphics \

@@ -1,27 +1,36 @@
+/*
+  Info Scene contains the authors of the game.
+*/
+
 #include "infoscene.h"
 
 static ALLEGRO_DISPLAY *display;
 static ALLEGRO_FONT *textFont;
 static int displayWidth;
-static bool *doexit_ref;
+static bool *doexit;
 
+/*
+  main function called by scenecontroller.c.
+  prepares the required objects.
+*/
 void infoscene_init(ALLEGRO_DISPLAY *_display, bool *_doexit) {
-  printf("infoscene_init\n");
-
   display = _display;
-  doexit_ref = _doexit;
+  doexit = _doexit;
   displayWidth = al_get_display_width(display);
 
   infoscene_initText();
-  infoscene_tick();
 }
 
-void infoscene_destroy() {
-  printf("infoscene_destroy\n");
-  
+/*
+  frees allegro objects memory
+*/
+void infoscene_destroy() {  
   al_destroy_font(textFont);
 }
 
+/*
+  gets forwarded events from scenecontroller.c. 
+*/
 void infoscene_handleEvents(ALLEGRO_EVENT ev) {
   if(ev.type == ALLEGRO_EVENT_KEY_UP) {
     switch(ev.keyboard.keycode) {
@@ -33,18 +42,27 @@ void infoscene_handleEvents(ALLEGRO_EVENT ev) {
   }
 }
 
+/*
+  tick called by scenecontroller.c. redraw function.
+*/
 void infoscene_tick() {
   al_clear_to_color(al_map_rgb(0,0,0));
   infoscene_drawText();
   al_flip_display();
 }
 
+/*
+  init text drawing objects
+*/
 void infoscene_initText() {
   char buffer[100];
   sprintf(buffer,"%s/%s",al_get_current_directory(),"Arkitech_Light.ttf");
   textFont = al_load_font(buffer, 24*SCREEN_RATIO, 1);
 }
 
+/*
+  draw text with prepared draw object.
+*/
 void infoscene_drawText() {
   ALLEGRO_COLOR color;
   int middle = displayWidth/2;

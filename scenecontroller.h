@@ -6,7 +6,7 @@
   #include "constants.h"
   #include "scenes/mainscene.h"
   #include "scenes/infoscene.h"
-  #include "scenes/stagescene.h"
+  #include "scenes/gamescene.h"
   
   void scenecontroller_init(ALLEGRO_DISPLAY *_display, bool *_doexit);
   void scenecontroller_openScene(int scene);

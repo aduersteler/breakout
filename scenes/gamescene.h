@@ -40,24 +40,24 @@
     int height;
   } Ball;
 
-  void stagescene_init(ALLEGRO_DISPLAY *_display, bool *_doexit);
-  void stagescene_initBar();
-  void stagescene_initBackground();
-  void stagescene_initText();
-  void stagescene_updateBar();
-  void stagescene_playSound();
-  void stagescene_drawGameOverText();
-  void stagescene_updateBall();
-  void stagescene_logic_tick();
-  void stagescene_tick();
-  void stagescene_loadFile(char* filename);
-  void stagescene_drawBall();
-  void stagescene_drawBackground();
-  void stagescene_drawBar();
-  void stagescene_drawBricks();
-  void stagescene_drawBrick(Obstacle obstacle);
-  void stagescene_destroy();
-  void stagescene_handleEvents(ALLEGRO_EVENT ev);
+  void gamescene_init(ALLEGRO_DISPLAY *_display, bool *_doexit);
+  void gamescene_initBar();
+  void gamescene_initBackground();
+  void gamescene_initText();
+  void gamescene_updateBar();
+  void gamescene_playSound();
+  void gamescene_drawGameOverText();
+  void gamescene_updateBall();
+  void gamescene_logic_tick();
+  void gamescene_tick();
+  void gamescene_loadFile(char* filename);
+  void gamescene_drawBall();
+  void gamescene_drawBackground();
+  void gamescene_drawBar();
+  void gamescene_drawBricks();
+  void gamescene_drawBrick(Obstacle obstacle);
+  void gamescene_destroy();
+  void gamescene_handleEvents(ALLEGRO_EVENT ev);
   ALLEGRO_COLOR getBrickColor(Obstacle obstacle);
 
 #endif

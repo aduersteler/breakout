@@ -10,7 +10,7 @@
   #include <allegro5/allegro_ttf.h>
   #include "../constants.h"
   #include "../scenecontroller.h"
-
+  
   typedef struct {
     char *text;
     int index;

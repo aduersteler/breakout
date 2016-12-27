@@ -1,14 +1,25 @@
+/*
+  Description:
+  Scene Controller handles the events and scenes of the game
+*/
+
 #include "scenecontroller.h"
 
 static int currentScene;
 static ALLEGRO_DISPLAY *display = NULL;
 static bool *doexit;
 
+/*
+  main function. called on main.c
+*/
 void scenecontroller_init(ALLEGRO_DISPLAY *_display, bool *_doexit) {
   display = _display;
   doexit = _doexit;
 }
 
+/*
+  opens a defined scene
+*/
 void scenecontroller_openScene(int scene) {
   scenecontroller_closeCurrentScene();
   switch(scene) {
@@ -16,7 +27,7 @@ void scenecontroller_openScene(int scene) {
         mainscene_init(display, doexit);
         break;
     case SCENE_GAME:
-        stagescene_init(display, doexit);
+        gamescene_init(display, doexit);
         break;
     case SCENE_INFO:
         infoscene_init(display, doexit);
@@ -25,6 +36,9 @@ void scenecontroller_openScene(int scene) {
     currentScene = scene;
 }
 
+/*
+  sets the current scene to default and destroyes the current scene
+*/
 void scenecontroller_closeCurrentScene() {
   switch(currentScene) {
     case SCENE_MAIN:
@@ -37,24 +51,30 @@ void scenecontroller_closeCurrentScene() {
       break;
     case SCENE_GAME:
       currentScene = 0;
-      stagescene_destroy();
+      gamescene_destroy();
       break;
   }
-
 }
 
+/*
+  closes the current scene and stops the main loop from main.c
+*/
 void scenecontroller_quit() {
   scenecontroller_closeCurrentScene();
   *doexit = true;
 }
 
+/*
+  the forwarded events from main.c call this function and this
+  forwards the events to the current scene event handle function
+*/
 void scenecontroller_handleEvents(ALLEGRO_EVENT ev) {
   switch(currentScene) {
     case SCENE_MAIN:
       mainscene_handleEvents(ev);
       break;
     case SCENE_GAME:
-      stagescene_handleEvents(ev);
+      gamescene_handleEvents(ev);
       break;
     case SCENE_INFO:
       infoscene_handleEvents(ev);
@@ -62,13 +82,20 @@ void scenecontroller_handleEvents(ALLEGRO_EVENT ev) {
   }
 }
 
+/*
+  called from main.c and forward the function to the current 
+  scene tick function
+*/
 void scenecontroller_tick() {
   switch(currentScene) {
     case SCENE_MAIN:
       mainscene_tick();
       break;
+    case SCENE_INFO:
+      infoscene_tick();
+      break;
     case SCENE_GAME:
-      stagescene_tick();
+      gamescene_tick();
       break;
   }
 }

@@ -1,21 +1,38 @@
-#include "stagescene.h"
+#include "gamescene.h"
 #include <Math.h>
 
 static ALLEGRO_DISPLAY *display;
 static ALLEGRO_BITMAP *backgroundImage = NULL;
 static int displayWidth;
 static int displayHeight;
+
+// doexit reference from main.c
 static bool *doexit;
+
+// obstacle bricks
 static Obstacle obstacles[157]; // todo: 157 need to be dynamic
+
+// player bar object
 static Bar bar = {.width=100, .height=25, .directionX=0};
+
+// moving ball object
 static Ball ball = {.width=25, .height=25, .directionX=1, .directionY=1};
+
 static ALLEGRO_SAMPLE *sample=NULL;
 static ALLEGRO_FONT *textFont;
+
+// is gameover flag
 static int gameOver = 0;
 
-void stagescene_init(ALLEGRO_DISPLAY *_display, bool *_doexit) {
-  printf("stagescene_init\n");
+/*
+  main function called by scenecontroller.c.
+  prepares the required objects.
 
+  loads map file
+
+  inits bar and ball position
+*/
+void gamescene_init(ALLEGRO_DISPLAY *_display, bool *_doexit) {
   display = _display;
   doexit = _doexit;
   displayWidth = al_get_display_width(display);
@@ -24,12 +41,12 @@ void stagescene_init(ALLEGRO_DISPLAY *_display, bool *_doexit) {
     
   sprintf(buffer,"%s/%s",al_get_current_directory(),"audio.ogg");
 
-  stagescene_initText();
+  gamescene_initText();
   sample = al_load_sample(buffer);
   al_reserve_samples(1);
-  stagescene_loadFile("map1.txt");
-  stagescene_initBackground();
-  stagescene_initBar();
+  gamescene_loadFile("map1.txt");
+  gamescene_initBackground();
+  gamescene_initBar();
 
   ball.y = (displayHeight/SCREEN_RATIO)-150*SCREEN_RATIO;
   ball.x = bar.x;
@@ -41,17 +58,27 @@ void stagescene_init(ALLEGRO_DISPLAY *_display, bool *_doexit) {
   ball.directionX=1;
 }
 
-void stagescene_initBar() {
+/*
+  init bar position (center)
+*/
+void gamescene_initBar() {
   bar.x = 0;
   bar.y = (displayHeight/SCREEN_RATIO)-bar.height-50;
 }
 
-void stagescene_destroy() {
-  printf("stagescene_destroy\n");
+/*
+  frees allegro objects memory
+*/
+void gamescene_destroy() {
   al_destroy_bitmap(backgroundImage);
+  al_destroy_sample(sample);
+  al_destroy_font(textFont);
 }
 
-void stagescene_handleEvents(ALLEGRO_EVENT ev) {
+/*
+  gets forwarded events from scenecontroller.c. 
+*/
+void gamescene_handleEvents(ALLEGRO_EVENT ev) {
   if(ev.type == ALLEGRO_EVENT_KEY_DOWN) {
     switch(ev.keyboard.keycode) {
       
@@ -83,7 +110,10 @@ void stagescene_handleEvents(ALLEGRO_EVENT ev) {
   }
 }
 
-void stagescene_initBackground() {
+/*
+  init background drawing objects
+*/
+void gamescene_initBackground() {
   al_set_new_bitmap_flags(ALLEGRO_MAG_LINEAR);
   char buffer[100];
   sprintf(buffer,"%s/%s",al_get_current_directory(),"background.png");
@@ -91,13 +121,19 @@ void stagescene_initBackground() {
   backgroundImage = al_load_bitmap(buffer);
 }
 
-void stagescene_initText() {
+/*
+  init text drawing objects
+*/
+void gamescene_initText() {
   char buffer[100];
   sprintf(buffer,"%s/%s",al_get_current_directory(),"Arkitech_Light.ttf");
   textFont = al_load_font(buffer, 24*SCREEN_RATIO, 1);
 }
 
-void stagescene_drawBall() {
+/*
+  draw ball object
+*/
+void gamescene_drawBall() {
   ALLEGRO_COLOR color;
 
   color = al_map_rgb(255,255,255);
@@ -111,7 +147,10 @@ void stagescene_drawBall() {
   al_draw_filled_rectangle(x,y, x+width, y+height, color);
 }
 
-void stagescene_drawBar() {
+/*
+  draw bar object
+*/
+void gamescene_drawBar() {
   ALLEGRO_COLOR color, colorDark, colorBright;
 
   color = al_map_rgb(255,0,0);
@@ -132,7 +171,10 @@ void stagescene_drawBar() {
   al_draw_line(x,y,x,y+height,colorBright,1.0);
 }
 
-void stagescene_updateBar() {
+/*
+  Update bar position by current speed and direction
+*/
+void gamescene_updateBar() {
   double moveSpeed = ((1.0/FPS)*800);
 
   if(bar.x+moveSpeed*bar.directionX >= 0 && (bar.x+bar.width+moveSpeed)*bar.directionX <= displayWidth/SCREEN_RATIO) {
@@ -140,9 +182,10 @@ void stagescene_updateBar() {
   }
 }
 
-
-
-void stagescene_drawGameOverText() {
+/*
+  draw Game Over text
+*/
+void gamescene_drawGameOverText() {
   ALLEGRO_COLOR color;
   int middle = displayWidth/2;
   int offset = 100;
@@ -153,7 +196,10 @@ void stagescene_drawGameOverText() {
   al_draw_text(textFont, color, middle, (0*margin+offset)*SCREEN_RATIO, 1, "Game Over");
 }
 
-void stagescene_updateBall() {
+/*
+  update ball position by current speed and direction
+*/
+void gamescene_updateBall() {
   double moveSpeed = ((1.0/FPS)*300);
 
   // BoundingCollision
@@ -161,7 +207,7 @@ void stagescene_updateBall() {
   // top bounding
   if(ball.y <= 0) {
     ball.directionY = 1;
-    stagescene_playSound();
+    gamescene_playSound();
   }
 
   // bottom bounding
@@ -174,19 +220,19 @@ void stagescene_updateBall() {
   // left bounding
   if(ball.x <= 0) {
     ball.directionX = 1;
-    stagescene_playSound();
+    gamescene_playSound();
   }
 
   //right bounding
   if(ball.x >= (displayWidth/SCREEN_RATIO)-ball.width) {
     ball.directionX = -1;
-    stagescene_playSound();
+    gamescene_playSound();
   }
 
   // Bar Collision
   if(ball.y+ball.height >= bar.y && (ball.x+ball.width) >= bar.x && ball.x < (bar.x + bar.width)) {
     ball.directionY = -1;
-    stagescene_playSound();
+    gamescene_playSound();
   }
 
   // Obstacle Collision
@@ -200,28 +246,28 @@ void stagescene_updateBall() {
       if( (ball.y <= brick->y+brick->height && ball.y >= brick->y && ball.x <= brick->x+brick->width && ball.x+ball.width >= brick->x) ) {
         ball.directionY = 1;
         brick->enabled = false;
-        stagescene_playSound();
+        gamescene_playSound();
       }
 
       // collision on top
       if( (ball.y+ball.height > brick->y && ball.y+ball.height < brick->y+brick->height && ball.x < brick->x+brick->width && ball.x+ball.width > brick->x) ) {
         ball.directionY = -1;
         brick->enabled = false;
-        stagescene_playSound();
+        gamescene_playSound();
       }
 
       // collision on left
       if( (ball.y <= brick->y+brick->height && ball.y >= brick->y && ball.x+ball.width >= brick->x && ball.x <= brick->x) ) {
         ball.directionX = -1;
         brick->enabled = false;
-        stagescene_playSound();
+        gamescene_playSound();
       }
 
       // collision on right
       if( (ball.y < brick->y+brick->height && ball.y > brick->y && ball.x < brick->x+brick->width && ball.x+ball.width > brick->x+brick->width) ) {
         ball.directionX = 1;
         brick->enabled = false;
-        stagescene_playSound();
+        gamescene_playSound();
       } 
     }
 
@@ -231,31 +277,39 @@ void stagescene_updateBall() {
   ball.y = (double) ball.y+moveSpeed*ball.directionY;
 }
 
-void stagescene_playSound() {
+/*
+  play sample
+*/
+void gamescene_playSound() {
   al_play_sample(sample, 1.0, 0.0,1.0,ALLEGRO_PLAYMODE_ONCE,0);
 }
 
-void stagescene_tick() {
-
+/*
+  tick called by scenecontroller.c. redraw function.
+*/
+void gamescene_tick() {
   
   if(!gameOver) {
-    stagescene_updateBar();
-    stagescene_updateBall();
+    gamescene_updateBar();
+    gamescene_updateBall();
   }
   
-  stagescene_drawBackground();
-  stagescene_drawBricks();
-  stagescene_drawBar();
-  stagescene_drawBall();
+  gamescene_drawBackground();
+  gamescene_drawBricks();
+  gamescene_drawBar();
+  gamescene_drawBall();
 
   if(gameOver) {
-    stagescene_drawGameOverText();
+    gamescene_drawGameOverText();
   } 
 
   al_flip_display();
 }
 
-void stagescene_drawBackground() {
+/*
+  draw background with prepared draw objects
+*/
+void gamescene_drawBackground() {
   
   al_draw_scaled_bitmap(
     backgroundImage,
@@ -292,7 +346,10 @@ ALLEGRO_COLOR getBrickColor(Obstacle obstacle) {
   return color;
 }
 
-void stagescene_drawBrick(Obstacle obstacle) {
+/*
+  draw obstacle
+*/
+void gamescene_drawBrick(Obstacle obstacle) {
 
   ALLEGRO_COLOR color, colorDark, colorBright;
 
@@ -317,18 +374,24 @@ void stagescene_drawBrick(Obstacle obstacle) {
   al_draw_line(x,y,x,y+height,colorBright,1.0);
 }
 
-void stagescene_drawBricks() {
+/*
+  draw all obstacles
+*/
+void gamescene_drawBricks() {
   for(int i = 0; i < (int)( sizeof(obstacles) / sizeof(obstacles[0]) ); i++) {
     Obstacle * brick = &obstacles[i];
 
     if(brick->enabled) {
-      stagescene_drawBrick(obstacles[i]);
+      gamescene_drawBrick(obstacles[i]);
     }
     
   }
 }
 
-void stagescene_loadFile(char* filename) {
+/*
+  load map file and save into obstacles array
+*/
+void gamescene_loadFile(char* filename) {
   char c;
   FILE *file;
   file = fopen("map2.txt", "r");
@@ -339,6 +402,8 @@ void stagescene_loadFile(char* filename) {
 
   if (file) {
     while ((c = getc(file)) != EOF) {
+
+      // valid color? save the color
       if(c == 'r' || c == 'y' || c == 'g' || c == 'b') {
 
         double offsetX = 120;
@@ -360,13 +425,11 @@ void stagescene_loadFile(char* filename) {
         indexX++;
         index++;
       }
+      // if return, make new row
       else if('\n'){
         indexX=0;
         indexY++;
       }
-      
-      
-      
     }
     fclose(file);
 
