@@ -3,13 +3,12 @@
 Breakout game built with allegrolib.
 
 ## Requirements
-- Mac OS 10.12 (macOS sierra) or Linux
+- Mac OS 10.12 (macOS sierra)
 - Allegro 5.1
 
 ## Installation
 
-Run 
+Build and run on OSX
 ```bash
-./build && ./game
+./build_osx && ./game
 ``` 
-to run the game.
