@@ -1,3 +1,8 @@
+/*
+  Game Scene. Contains the main game: moving ball, 
+  movable bar (player) and obstacles (bricks).
+*/
+
 #include "gamescene.h"
 #include <Math.h>
 

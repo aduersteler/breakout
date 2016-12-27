@@ -1,7 +1,5 @@
 #!/bin/bash
 
-clear
-
 # Static Linking
 
 gcc \
@@ -42,32 +40,5 @@ allegro_acodec-static-5 \
 allegro_main-static-5 \
 allegro-static-5` \
 `pkg-config --libs freetype2 vorbis vorbisfile ogg flac opus opusfile --cflags --static`
-
-
-# Dynamic Linking
-
-# gcc \
-# -Wall \
-# main.c \
-# scenecontroller.c \
-# scenes/mainscene.c \
-# scenes/infoscene.c \
-# scenes/gamescene.c \
-# -o game \
-# -g -framework CoreFoundation \
-# -framework CoreGraphics \
-# -framework CoreServices \
-# -framework ApplicationServices \
-# -framework IOKit \
-# -framework AppKit \
-# -framework OpenGL \
-# `pkg-config --libs --cflags \
-# allegro_font-5 \
-# allegro_ttf-5 \
-# allegro_image-5 \
-# allegro_primitives-5 \
-# allegro_main-5 \
-# allegro-5`
-
 
 strip game

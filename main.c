@@ -1,3 +1,7 @@
+/*
+  Main Program. Starts the game loop.
+*/
+
 #include <stdio.h>
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_primitives.h>
