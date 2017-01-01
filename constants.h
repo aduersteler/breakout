@@ -5,6 +5,7 @@
   #define SCREEN_HEIGHT 768
   #define SCREEN_RATIO 2
   #define FPS 60
+  #define MAX_BRICKS 156
 
   enum SceneType {
     SCENE_MAIN=1,

@@ -73,5 +73,5 @@ void infoscene_drawText() {
   al_clear_to_color(al_map_rgb(0,0,0));
   al_draw_text(textFont, color, middle, (0*margin+offset)*SCREEN_RATIO, 1, "Breakout Game by");
   al_draw_text(textFont, color, middle, (1*margin+offset)*SCREEN_RATIO, 1, "Albrik Dürsteler & Erik Amgwerd");
-  al_draw_text(textFont, color, middle, (2*margin+offset)*SCREEN_RATIO, 1, "2016");
+  al_draw_text(textFont, color, middle, (2*margin+offset)*SCREEN_RATIO, 1, "v. 1.0 (2016)");
 }

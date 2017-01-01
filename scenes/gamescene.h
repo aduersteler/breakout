@@ -43,11 +43,15 @@
   void gamescene_init(ALLEGRO_DISPLAY *_display, bool *_doexit);
   void gamescene_initBar();
   void gamescene_initBackground();
-  void gamescene_initText();
+  void gamescene_initGameOverText();
+  void gamescene_initScore();
+  void gamescene_initWinText();
   void gamescene_updateBar();
   void gamescene_playSound();
   void gamescene_drawGameOverText();
+  void gamescene_drawWinText();
   void gamescene_updateBall();
+  void onBrickCollision(Obstacle *brick);
   void gamescene_logic_tick();
   void gamescene_tick();
   void gamescene_loadFile(char* filename);

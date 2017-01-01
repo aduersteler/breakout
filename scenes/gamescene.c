@@ -10,12 +10,13 @@ static ALLEGRO_DISPLAY *display;
 static ALLEGRO_BITMAP *backgroundImage = NULL;
 static int displayWidth;
 static int displayHeight;
+static int score = 0;
 
 // doexit reference from main.c
 static bool *doexit;
 
 // obstacle bricks
-static Obstacle obstacles[157]; // todo: 157 need to be dynamic
+static Obstacle obstacles[MAX_BRICKS]; // todo: 157 need to be dynamic
 
 // player bar object
 static Bar bar = {.width=100, .height=25, .directionX=0};
@@ -24,10 +25,18 @@ static Bar bar = {.width=100, .height=25, .directionX=0};
 static Ball ball = {.width=25, .height=25, .directionX=1, .directionY=1};
 
 static ALLEGRO_SAMPLE *sample=NULL;
-static ALLEGRO_FONT *textFont;
+static ALLEGRO_FONT *gameOverFont;
+static ALLEGRO_FONT *scoreFont;
+static ALLEGRO_FONT *winFont;
 
 // is gameover flag
 static int gameOver = 0;
+
+// is game win flag
+static int gameWon = 0;
+
+// disabled bricks count
+static int disabledBricksCount = 0;
 
 /*
   main function called by scenecontroller.c.
@@ -46,21 +55,39 @@ void gamescene_init(ALLEGRO_DISPLAY *_display, bool *_doexit) {
     
   sprintf(buffer,"%s/%s",al_get_current_directory(),"audio.ogg");
 
-  gamescene_initText();
   sample = al_load_sample(buffer);
   al_reserve_samples(1);
-  gamescene_loadFile("map1.txt");
+  gamescene_loadFile("map2.txt");
   gamescene_initBackground();
   gamescene_initBar();
+  gamescene_initGameOverText();
+  gamescene_initScore();
+  gamescene_initWinText();
 
   ball.y = (displayHeight/SCREEN_RATIO)-150*SCREEN_RATIO;
   ball.x = bar.x;
 
   // init values
   gameOver = 0;
+  gameWon = 0;
+  disabledBricksCount = 0;
+
+  score = 0;
   bar.directionX=0;
   ball.directionY=1;
   ball.directionX=1;
+}
+
+void gamescene_initScore() {
+  char buffer[100];
+  sprintf(buffer,"%s/%s",al_get_current_directory(),"Arkitech_Light.ttf");
+  scoreFont = al_load_font(buffer, 24*SCREEN_RATIO, 1);
+}
+
+void gamescene_initWinText() {
+  char buffer[100];
+  sprintf(buffer,"%s/%s",al_get_current_directory(),"Arkitech_Light.ttf");
+  winFont = al_load_font(buffer, 24*SCREEN_RATIO, 1);
 }
 
 /*
@@ -77,7 +104,9 @@ void gamescene_initBar() {
 void gamescene_destroy() {
   al_destroy_bitmap(backgroundImage);
   al_destroy_sample(sample);
-  al_destroy_font(textFont);
+  al_destroy_font(gameOverFont);
+  al_destroy_font(scoreFont);
+  al_destroy_font(winFont);
 }
 
 /*
@@ -106,7 +135,7 @@ void gamescene_handleEvents(ALLEGRO_EVENT ev) {
         scenecontroller_openScene(SCENE_MAIN);
         break;
       case ALLEGRO_KEY_ENTER:
-        if(gameOver) {
+        if(gameOver || gameWon) {
           scenecontroller_closeCurrentScene();
           scenecontroller_openScene(SCENE_MAIN);
         }
@@ -129,10 +158,10 @@ void gamescene_initBackground() {
 /*
   init text drawing objects
 */
-void gamescene_initText() {
+void gamescene_initGameOverText() {
   char buffer[100];
   sprintf(buffer,"%s/%s",al_get_current_directory(),"Arkitech_Light.ttf");
-  textFont = al_load_font(buffer, 24*SCREEN_RATIO, 1);
+  gameOverFont = al_load_font(buffer, 24*SCREEN_RATIO, 1);
 }
 
 /*
@@ -198,7 +227,53 @@ void gamescene_drawGameOverText() {
 
   color = al_map_rgb(255, 255, 255);
   al_clear_to_color(al_map_rgb(0,0,0));
-  al_draw_text(textFont, color, middle, (0*margin+offset)*SCREEN_RATIO, 1, "Game Over");
+  al_draw_text(gameOverFont, color, middle, (0*margin+offset)*SCREEN_RATIO, 1, "Game Over");
+}
+
+/*
+  draw Win Text
+*/
+void gamescene_drawWinText() {
+  ALLEGRO_COLOR color;
+  int middle = displayWidth/2;
+  int offset = 100;
+  int margin = 30;
+
+  color = al_map_rgb(255, 255, 255);
+  al_clear_to_color(al_map_rgb(0,0,0));
+  al_draw_text(winFont, color, middle, (0*margin+offset)*SCREEN_RATIO, 1, "You Win!");
+}
+
+/*
+  draw Score
+*/
+void gamescene_drawScore() {
+  ALLEGRO_COLOR color;
+  int middle = displayWidth/2;
+
+  color = al_map_rgb(255, 255, 255);
+  char scoreText[1024];
+  sprintf(scoreText, "%d", score);
+  al_draw_text(scoreFont, color, middle, (displayHeight/SCREEN_RATIO-40)*SCREEN_RATIO, 1, scoreText);
+}
+
+/*
+  Called if brick has collision
+*/
+void onBrickCollision(Obstacle *brick) {
+  
+  gamescene_playSound();
+  brick->enabled = false;
+  disabledBricksCount++;
+
+  switch(brick->color) {
+    case 'y':
+      score += 20;
+      break;
+    default:
+      score += 5;
+      break;
+  }
 }
 
 /*
@@ -219,7 +294,6 @@ void gamescene_updateBall() {
   if(ball.y >= (displayHeight/SCREEN_RATIO)-ball.height) {
     // ball.directionY = -1;
     gameOver = 1;
-    
   }
 
   // left bounding
@@ -240,40 +314,48 @@ void gamescene_updateBall() {
     gamescene_playSound();
   }
 
+  int bricksCount = (int)(sizeof(obstacles) / sizeof(obstacles[0]));
+
   // Obstacle Collision
-  for(int i = 0; i < (int)( sizeof(obstacles) / sizeof(obstacles[0]) ); i++) {
+  for(int i = 0; i < bricksCount; i++) {
 
     Obstacle *brick = &obstacles[i];
+    int hasCollision = 0;
     
     if(brick->enabled) {
-      
       // collision on bottom
       if( (ball.y <= brick->y+brick->height && ball.y >= brick->y && ball.x <= brick->x+brick->width && ball.x+ball.width >= brick->x) ) {
         ball.directionY = 1;
-        brick->enabled = false;
-        gamescene_playSound();
+        hasCollision = 1;
       }
 
       // collision on top
       if( (ball.y+ball.height > brick->y && ball.y+ball.height < brick->y+brick->height && ball.x < brick->x+brick->width && ball.x+ball.width > brick->x) ) {
         ball.directionY = -1;
-        brick->enabled = false;
-        gamescene_playSound();
+        hasCollision = 1;
       }
 
       // collision on left
       if( (ball.y <= brick->y+brick->height && ball.y >= brick->y && ball.x+ball.width >= brick->x && ball.x <= brick->x) ) {
         ball.directionX = -1;
-        brick->enabled = false;
-        gamescene_playSound();
+        hasCollision = 1;
       }
 
       // collision on right
       if( (ball.y < brick->y+brick->height && ball.y > brick->y && ball.x < brick->x+brick->width && ball.x+ball.width > brick->x+brick->width) ) {
         ball.directionX = 1;
-        brick->enabled = false;
-        gamescene_playSound();
+        hasCollision = 1;
       } 
+
+      if(hasCollision) {
+        onBrickCollision(brick);
+      }
+    }
+
+    // printf("%d %d\n", disabledBricksCount,bricksCount);
+
+    if(disabledBricksCount >= bricksCount) {
+      gameWon = 1;
     }
 
   }
@@ -293,8 +375,10 @@ void gamescene_playSound() {
   tick called by scenecontroller.c. redraw function.
 */
 void gamescene_tick() {
+
+
   
-  if(!gameOver) {
+  if(!gameOver && !gameWon) {
     gamescene_updateBar();
     gamescene_updateBall();
   }
@@ -303,9 +387,14 @@ void gamescene_tick() {
   gamescene_drawBricks();
   gamescene_drawBar();
   gamescene_drawBall();
+  gamescene_drawScore();
 
   if(gameOver) {
     gamescene_drawGameOverText();
+  }
+
+  if(gameWon) {
+    gamescene_drawWinText();
   } 
 
   al_flip_display();
@@ -385,11 +474,9 @@ void gamescene_drawBrick(Obstacle obstacle) {
 void gamescene_drawBricks() {
   for(int i = 0; i < (int)( sizeof(obstacles) / sizeof(obstacles[0]) ); i++) {
     Obstacle * brick = &obstacles[i];
-
     if(brick->enabled) {
       gamescene_drawBrick(obstacles[i]);
     }
-    
   }
 }
 
@@ -399,10 +486,10 @@ void gamescene_drawBricks() {
 void gamescene_loadFile(char* filename) {
   char c;
   FILE *file;
-  file = fopen("map2.txt", "r");
+  file = fopen(filename, "r");
   int indexX = 0;
   int indexY = 0;
-  int index = 1;
+  int index = 0;
 
 
   if (file) {
@@ -419,7 +506,7 @@ void gamescene_loadFile(char* filename) {
         double x = offsetX+(indexX*(width+margin));
         double y = offsetY+(indexY*(height+margin));
 
-        obstacles[index].enabled = true;
+        obstacles[index].enabled = 1;
         obstacles[index].color = c;
         obstacles[index].indexX = indexX;
         obstacles[index].indexY = indexY;
