@@ -45,4 +45,4 @@ allegro-static-5` \
 
 strip breakout.out
 cp breakout.out ../breakout
-cp breakout.out ../release/Breakout.app/Contents/MacOS/breakout
+cp breakout.out ../release-osx/Breakout.app/Contents/MacOS/breakout

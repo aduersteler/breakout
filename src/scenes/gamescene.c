@@ -51,8 +51,8 @@ void gamescene_init(ALLEGRO_DISPLAY *_display, bool *_doexit) {
   doexit = _doexit;
   displayWidth = al_get_display_width(display);
   displayHeight = al_get_display_height(display);
-  char audioFilename[300];
-  char mapFilename[300];
+  char audioFilename[FILENAME_MAX];
+  char mapFilename[FILENAME_MAX];
 
   sprintf(audioFilename,"%s/%s",al_get_current_directory(),"assets/audio.ogg");
   sprintf(mapFilename,"%s/%s",al_get_current_directory(),"maps/map2.txt");
@@ -82,13 +82,13 @@ void gamescene_init(ALLEGRO_DISPLAY *_display, bool *_doexit) {
 }
 
 void gamescene_initScore() {
-  char buffer[100];
+  char buffer[FILENAME_MAX];
   sprintf(buffer,"%s/%s",al_get_current_directory(),"assets/Arkitech_Light.ttf");
   scoreFont = al_load_font(buffer, 24*SCREEN_RATIO, 1);
 }
 
 void gamescene_initWinText() {
-  char buffer[100];
+  char buffer[FILENAME_MAX];
   sprintf(buffer,"%s/%s",al_get_current_directory(),"assets/Arkitech_Light.ttf");
   winFont = al_load_font(buffer, 24*SCREEN_RATIO, 1);
 }
@@ -152,7 +152,7 @@ void gamescene_handleEvents(ALLEGRO_EVENT ev) {
 */
 void gamescene_initBackground() {
   al_set_new_bitmap_flags(ALLEGRO_MAG_LINEAR);
-  char buffer[100];
+  char buffer[FILENAME_MAX];
   sprintf(buffer,"%s/%s",al_get_current_directory(),"assets/background.png");
 
   backgroundImage = al_load_bitmap(buffer);
@@ -162,7 +162,7 @@ void gamescene_initBackground() {
   init text drawing objects
 */
 void gamescene_initGameOverText() {
-  char buffer[100];
+  char buffer[FILENAME_MAX];
   sprintf(buffer,"%s/%s",al_get_current_directory(),"assets/Arkitech_Light.ttf");
   gameOverFont = al_load_font(buffer, 24*SCREEN_RATIO, 1);
 }
@@ -354,8 +354,6 @@ void gamescene_updateBall() {
         onBrickCollision(brick);
       }
     }
-
-    // printf("%d %d\n", disabledBricksCount,bricksCount);
 
     if(disabledBricksCount >= bricksCount) {
       gameWon = 1;

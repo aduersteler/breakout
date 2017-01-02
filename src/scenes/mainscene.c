@@ -125,7 +125,7 @@ void mainscene_handleEvents(ALLEGRO_EVENT ev) {
 */
 void mainscene_initBackground() {
   al_set_new_bitmap_flags(ALLEGRO_MAG_LINEAR);
-  char buffer[100];
+  char buffer[FILENAME_MAX];
   sprintf(buffer,"%s/%s",al_get_current_directory(),"assets/background.png");
 
   backgroundImage = al_load_bitmap(buffer);
@@ -135,7 +135,7 @@ void mainscene_initBackground() {
   init title drawing objects
 */
 void mainscene_initTitle() {
-  char buffer[100];
+  char buffer[FILENAME_MAX];
   sprintf(buffer,"%s/%s",al_get_current_directory(),"assets/Arkitech_Light.ttf");
   titleFont = al_load_font(buffer, 50*SCREEN_RATIO, 1);
 }
@@ -144,7 +144,7 @@ void mainscene_initTitle() {
   init navigation drawing objects
 */
 void mainscene_initNavigation() {
-  char buffer[100];
+  char buffer[FILENAME_MAX];
   sprintf(buffer,"%s/%s",al_get_current_directory(),"assets/Arkitech_Light.ttf");
   buttonFont = al_load_font(buffer, 30*SCREEN_RATIO, 1);
 }
