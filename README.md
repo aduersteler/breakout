@@ -10,5 +10,5 @@ Breakout game built with allegrolib.
 
 Build and run on OSX
 ```bash
-./build_osx && ./game
+./build_osx && ./breakout
 ``` 
