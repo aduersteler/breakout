@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="14.2">
+  <zoom_level>10</zoom_level>
+  <element>
+    <type>com.baselet.element.old.allinone.ActivityDiagramText</type>
+    <coordinates>
+      <x>0</x>
+      <y>0</y>
+      <w>1758</w>
+      <h>1797</h>
+    </coordinates>
+    <panel_attributes>title:Breakout
+Start
+setze default view (AktuelleView = MenuView)
+setze beendet = falsch
+While[solange beendet = falsch]
+	[was ist AktuelleView?]
+	Fork
+			[MenuView]
+			rendere Menu View
+			[Welcher Navigationspunkt wurde gewählt?]
+			Fork
+
+				[Spiel starten]
+				setze AktuelleView = GameView
+				setze initial spielgewonnen = falsch
+				setze initial spielverloren = falsch
+
+				[Info]
+				setze AktuelleView = InfoView
+
+				[Quit]
+				setze beendet = wahr
+				
+			
+			Sync
+			Inizialisiere AktuelleView
+
+			
+			
+			[GameView]
+			rendere Game View
+			updateBallPosition
+			renderBall
+			renderSteine
+			renderSpieler
+			[spielgewonnen = wahr]
+			If
+				[Ja]
+				zeige WinView
+				AktuelleView = MenuView
+
+				[Nein]
+
+			[spielverloren = wahr]
+			If
+				[Ja]
+				zeige GameOverView
+				AktuelleView = MenuView
+				
+				[Nein]
+
+			EndIf
+			[ESC Taste gedrückt?]
+			If
+				[Ja]
+				AktuelleView = MenuView
+
+				[Nein]
+
+			EndIf
+			
+
+			[InfoView]
+			rendere Info View
+			[ESC gedrückt?]
+			If
+				[Ja]
+				setze AktuelleView = MenuView
+			
+				[Nein]
+			EndIf
+	Sync
+End
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+</diagram>

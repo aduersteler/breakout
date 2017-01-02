@@ -1,0 +1,133 @@
+---
+title: C-Projekt Breakout
+date: 2.1.2017
+author: von Albrik Dürsteler und Erik Amgwerd
+header-includes:
+    - \usepackage{fancyhdr}
+    - \pagestyle{fancy}
+    - \fancyhead[CO,CE]{C-Projekt Breakout}
+    - \fancyfoot[CO,CE]{C-Projekt Breakout}
+    - \fancyfoot[LE,RO]{\thepage}
+...
+
+#Beschreibung
+Diese Dokumentation beinhaltet die Implementation und Definition des C-Programm Projektes „Breakout”, erarbeitet von Albrik Dürsteler und Erik Amgwerd.
+
+![alt text](assets/Game.png "Game"){width=8cm}\ 
+![alt text](assets/Menu.png "Menu"){width=8cm}\ 
+
+#Geschichte von Breakout
+Breakout (oder Little Brick out) ist ein Programm (Computerspiel) das in in den 70er Jahre von Atari entwickelt wurde. 
+
+![alt text](assets/Breakout2600.svg.png "Breakout von Atari"){width=8cm}\ 
+
+#Spielablauf und Ziel
+Die Aufgabe ist es einen Ball so abzufeuern, dass man alle Mauersteine im Oberen Feld zerstört, ohne dass der Ball einmal herunter fällt. Speziell zu beachten gibt es das der Ball nur am Anfang abgefeuert wird und man dann, wie bei Ping:Pong den Ball anhand einer Bank wieder zurückschleudern muss. Je mehr Mauersteine zerstört werden, umso mehr Punkte gibt es. Werden alle Mauersteine zerstört, fängt das Spiel wieder von vorne an. So ist es möglich immer mehr Punkte zu er spielen und den Highscore zu knacken.
+
+##Use Case
+![Use Case 1](assets/breakout_usecase.pdf "Usecases")\ 
+
+##Programmablauf
+###Programmbeschreibung
+Der Benutzer startet das Spiel und steigt im Hauptmenü ein. Er hat die Möglichkeit "New Game", "Info" oder "Quit" mit den Pfeiltasten zu wählen und mit der Eingabe zu bestätigen. Wählt der Benutzer "New Game", startet das Spiel sofort. Es werden farbige abbaubare Blöcke, einen mit Pfeiltasten steuerbaren Balken sowie ein Spielball angezeigt. Wenn der Ball unterhalb des Bildschirms verschwindet, hat der Spieler das Spiel verloren. Game Over wird angezeigt. Baut der Spieler alle Blöcke ab, so hat er gewonnen. Dies wird ebenfalls angezeigt. Der Benutzer kommt auf die Menüansicht zurück, wenn der das Spiel beendet oder ESC gedrückt hat. Wählt der Benutzer "Info", wird ein Programminfo-Bildschirm angezeigt. Mit ESC gelangt der Spieler zurück ins Menü.
+Bei "Quit" wird das Spiel beendet.
+
+###Ablaufdiagramm
+![alt text](assets/breakout_fluss.pdf "Flussdiagramm")\ 
+
+#Projekt- und Codestruktur
+Das Programm wurde komplett in der Programmiersprache C geschrieben. Die Game Library Allegro 5.1 wurde für die grafische und audiovisuelle Umsetzung, sowie für das Keyboard- und Event-Handling verwendent. Es muss Allegro 5.1 auf dem System installiert sein.
+
+##Filestruktur
+- Arkitech_Light.ttf (einzige verwendete Schrift)
+- audio.ogg (einziger verwendeter Audio-Sample)
+- background.png (einzig verwendete Grafik)
+- build_osx (build script für mac os x)
+- constants.h (hier werden sämtliche Konstanten definiert)
+- main.c (Hauptprogramm)
+- map1.txt
+- map2.txt (verwendete Karte)
+- scenecontroller.c (Ansichten Kontroller/Switcher)
+- scenecontroller.h
+- scenes/gamescene.c (Hauptspiel)
+- scenes/gamescene.h
+- scenes/infoscene.c (Infobildschirm)
+- scenes/infoscene.h
+- scenes/mainscene.c (Hauptmenü)
+- scenes/mainscene.h
+
+##Codeaufbau
+- Der Code ist modular aufgebaut. 
+- Jede Scene befindet sich in einem separaten File.
+- Jedes C file hat ein Header File mit deklarierten Prototypen und Variablen.
+- Konstanten sind in einem separaten File ausgelagert.
+- libraryimports sind im jeweiligen Headerfile definiert.
+- es gibt keine globalen Variablen.
+- Levels sind in .txt Dateinen definiert.
+- Jede View wird auf- und abgebaut durch einen SceneController.
+- Jeder Funktionsname hat den Prefix des aktuellen Filenamens.
+- Es gibt keine dynamische Speicherallozierung in diesem Programm.
+- Der Code ist kommentiert
+- Die Funktionsnamen sind grösstenteils selbsterklärend definiert.
+- array, struct, int, float, char, string (, enum werden verwendet.
+
+\pagebreak
+
+##benötigte Allegro-Komponenten
+
+```c
+  #include <stdio.h>
+  #include <allegro5/allegro.h>
+  #include <allegro5/allegro_primitives.h>
+  #include <allegro5/allegro_font.h>
+  #include <allegro5/allegro_image.h>
+  #include <allegro5/allegro_ttf.h>
+  #include <allegro5/allegro_audio.h>
+  #include <allegro5/allegro_acodec.h>
+```
+
+##Aufbau des Level-Files
+
+**Farbdefinitionen**
+
+| char | Farbe | Punkte  |
+|:-----|:----- |--------:|
+|   r  | Rot   |    5    |
+|   g  | Grün  |    5    |
+|   b  | Blau  |    5    |
+|   y  | Gelb  |   15    |
+
+**map2.txt Datei**
+
+~~~~~~~
+rrgggggggggrr
+rbggggyggggbr
+ggbggyyyggbgg
+gggggyyyggggg
+gggyyybyyyggg
+gyyybbrbbyyyg
+gggyyybyyyggg
+gggggyyyggggg
+ggbggyyyggbgg
+rbggggyggggbr
+rrgggggggggrr
+ggggggggggggg
+~~~~~~~
+
+##Builds und Platform
+Das Programm wurde auf einem Mac OS X Sierra entwickelt und getestet. Ein statisches binary des Programms steht zur Verfügung.
+
+#Schluss
+
+##Herausforderung des Projekts
+- Ansichtenwechsel zwischen den verschiedenen Views \ 
+- Leveldatei strukturiert einlesen\ 
+- Keyboardevents mit verschiedenen Views\ 
+- mehrseitige Ballcollision mit Steinen (leider noch nicht so gut gelöst)\ 
+- statisches Build erstellen mit Allegro-Komponenten
+
+##Schlusswort
+Die Entwicklung dieses Computerprogrammes bereitete uns viel Freude. Nicht oft hat man die Möglichkeit so etwas zu entwickeln. Obwohl die C-Erfahrung sehr eingerostet war, war es uns relativ schnell gelungen, ein Spiel auf basis einer Dritten-Library zu realisieren. 
+
+
+

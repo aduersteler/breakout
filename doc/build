@@ -1,0 +1,19 @@
+#!/bin/bash
+
+pandoc -N \
+--standalone \
+--normalize \
+--smart \
+--self-contained \
+--template=mytemplate.tex \
+--variable mainfont="Helvetica" \
+--variable documentclass=article \
+--variable papersize=a4paper \
+--variable geometry="margin=2.5cm" \
+--variable sansfont="Helvetica" \
+--variable monofont="Menlo" \
+--variable fontsize=12pt \
+--variable version=1.0.0 \
+--variable lang=de-DE Documentation_Breakout.mdown \
+--latex-engine=xelatex \
+--toc -o Documentation_Breakout.pdf

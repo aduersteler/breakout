@@ -1,6 +1,6 @@
-#ifndef __STAGESCENE_H__
+#ifndef __GAMESCENE_H__
 
-  #define __STAGESCENE_H__
+  #define __GAMESCENE_H__
 
   #include <stdio.h>
   #include <allegro5/allegro.h>
