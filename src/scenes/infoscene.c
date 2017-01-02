@@ -56,7 +56,7 @@ void infoscene_tick() {
 */
 void infoscene_initText() {
   char buffer[100];
-  sprintf(buffer,"%s/%s",al_get_current_directory(),"Arkitech_Light.ttf");
+  sprintf(buffer,"%s/%s",al_get_current_directory(),"assets/Arkitech_Light.ttf");
   textFont = al_load_font(buffer, 24*SCREEN_RATIO, 1);
 }
 

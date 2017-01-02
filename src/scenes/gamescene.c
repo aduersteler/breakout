@@ -51,13 +51,16 @@ void gamescene_init(ALLEGRO_DISPLAY *_display, bool *_doexit) {
   doexit = _doexit;
   displayWidth = al_get_display_width(display);
   displayHeight = al_get_display_height(display);
-  char buffer[200];
-    
-  sprintf(buffer,"%s/%s",al_get_current_directory(),"audio.ogg");
+  char audioFilename[300];
+  char mapFilename[300];
 
-  sample = al_load_sample(buffer);
+  sprintf(audioFilename,"%s/%s",al_get_current_directory(),"assets/audio.ogg");
+  sprintf(mapFilename,"%s/%s",al_get_current_directory(),"maps/map2.txt");
+
+  sample = al_load_sample(audioFilename);
   al_reserve_samples(1);
-  gamescene_loadFile("map2.txt");
+  gamescene_loadFile(mapFilename);
+
   gamescene_initBackground();
   gamescene_initBar();
   gamescene_initGameOverText();
@@ -80,13 +83,13 @@ void gamescene_init(ALLEGRO_DISPLAY *_display, bool *_doexit) {
 
 void gamescene_initScore() {
   char buffer[100];
-  sprintf(buffer,"%s/%s",al_get_current_directory(),"Arkitech_Light.ttf");
+  sprintf(buffer,"%s/%s",al_get_current_directory(),"assets/Arkitech_Light.ttf");
   scoreFont = al_load_font(buffer, 24*SCREEN_RATIO, 1);
 }
 
 void gamescene_initWinText() {
   char buffer[100];
-  sprintf(buffer,"%s/%s",al_get_current_directory(),"Arkitech_Light.ttf");
+  sprintf(buffer,"%s/%s",al_get_current_directory(),"assets/Arkitech_Light.ttf");
   winFont = al_load_font(buffer, 24*SCREEN_RATIO, 1);
 }
 
@@ -150,7 +153,7 @@ void gamescene_handleEvents(ALLEGRO_EVENT ev) {
 void gamescene_initBackground() {
   al_set_new_bitmap_flags(ALLEGRO_MAG_LINEAR);
   char buffer[100];
-  sprintf(buffer,"%s/%s",al_get_current_directory(),"background.png");
+  sprintf(buffer,"%s/%s",al_get_current_directory(),"assets/background.png");
 
   backgroundImage = al_load_bitmap(buffer);
 }
@@ -160,7 +163,7 @@ void gamescene_initBackground() {
 */
 void gamescene_initGameOverText() {
   char buffer[100];
-  sprintf(buffer,"%s/%s",al_get_current_directory(),"Arkitech_Light.ttf");
+  sprintf(buffer,"%s/%s",al_get_current_directory(),"assets/Arkitech_Light.ttf");
   gameOverFont = al_load_font(buffer, 24*SCREEN_RATIO, 1);
 }
 
@@ -484,6 +487,7 @@ void gamescene_drawBricks() {
   load map file and save into obstacles array
 */
 void gamescene_loadFile(char* filename) {
+  printf("%s\n",filename);
   char c;
   FILE *file;
   file = fopen(filename, "r");

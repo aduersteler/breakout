@@ -1,5 +1,7 @@
 #!/bin/bash
 
+cd src
+
 # Static Linking
 
 gcc \
@@ -19,7 +21,7 @@ scenecontroller.c \
 scenes/mainscene.c \
 scenes/infoscene.c \
 scenes/gamescene.c \
--o game \
+-o ../game \
 -framework CoreFoundation \
 -framework CoreGraphics \
 -framework CoreAudio \
@@ -41,4 +43,4 @@ allegro_main-static-5 \
 allegro-static-5` \
 `pkg-config --libs freetype2 vorbis vorbisfile ogg flac opus opusfile --cflags --static`
 
-strip game
+strip ../game
