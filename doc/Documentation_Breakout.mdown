@@ -39,22 +39,22 @@ Bei "Quit" wird das Spiel beendet.
 Das Programm wurde komplett in der Programmiersprache C geschrieben. Die Game Library Allegro 5.1 wurde für die grafische und audiovisuelle Umsetzung, sowie für das Keyboard- und Event-Handling verwendent. Es muss Allegro 5.1 auf dem System installiert sein.
 
 ##Filestruktur
-- Arkitech_Light.ttf (einzige verwendete Schrift)
-- audio.ogg (einziger verwendeter Audio-Sample)
-- background.png (einzig verwendete Grafik)
+- src/main.c (Hauptprogramm)
+- src/constants.h (hier werden sämtliche Konstanten definiert)
+- src/scenecontroller.c (Ansichten Kontroller/Switcher)
+- src/scenecontroller.h
+- src/scenes/gamescene.c (Hauptspiel)
+- src/scenes/gamescene.h
+- src/scenes/infoscene.c (Infobildschirm)
+- src/scenes/infoscene.h
+- src/scenes/mainscene.c (Hauptmenü)
+- src/scenes/mainscene.h
+- assets/Arkitech_Light.ttf (einzige verwendete Schrift)
+- assets/audio.ogg (einziger verwendeter Audio-Sample)
+- assets/background.png (einzig verwendete Grafik)
+- maps/map1.txt
+- maps/map2.txt (verwendete Karte)
 - build_osx (build script für mac os x)
-- constants.h (hier werden sämtliche Konstanten definiert)
-- main.c (Hauptprogramm)
-- map1.txt
-- map2.txt (verwendete Karte)
-- scenecontroller.c (Ansichten Kontroller/Switcher)
-- scenecontroller.h
-- scenes/gamescene.c (Hauptspiel)
-- scenes/gamescene.h
-- scenes/infoscene.c (Infobildschirm)
-- scenes/infoscene.h
-- scenes/mainscene.c (Hauptmenü)
-- scenes/mainscene.h
 
 ##Codeaufbau
 - Der Code ist modular aufgebaut. 
