@@ -21,7 +21,7 @@ scenecontroller.c \
 scenes/mainscene.c \
 scenes/infoscene.c \
 scenes/gamescene.c \
--o ../game \
+-o breakout.out \
 -framework CoreFoundation \
 -framework CoreGraphics \
 -framework CoreAudio \
@@ -43,4 +43,6 @@ allegro_main-static-5 \
 allegro-static-5` \
 `pkg-config --libs freetype2 vorbis vorbisfile ogg flac opus opusfile --cflags --static`
 
-strip ../game
+strip breakout.out
+cp breakout.out ../breakout
+cp breakout.out ../release/Breakout.app/Contents/MacOS/breakout
