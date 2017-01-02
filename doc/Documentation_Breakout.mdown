@@ -117,6 +117,13 @@ ggggggggggggg
 ##Builds und Platform
 Das Programm wurde auf einem Mac OS X Sierra entwickelt und getestet. Ein statisches binary des Programms steht zur Verfügung.
 
+##Retina Einstellung
+Es ist zu beachten, dass der Build für Retina optimiert ist. Um einen Nicht-Retina-Build zu erstellen, muss im *src/constants.h* der Skalierfaktor von 2 auf 1 geändert werden
+
+```c
+#define SCREEN_RATIO 2
+```
+
 #Schluss
 
 ##Herausforderung des Projekts
