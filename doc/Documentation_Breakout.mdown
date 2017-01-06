@@ -35,6 +35,8 @@ Bei "Quit" wird das Spiel beendet.
 ###Ablaufdiagramm
 ![alt text](assets/breakout_fluss.pdf "Flussdiagramm")\ 
 
+\pagebreak
+
 #Projekt- und Codestruktur
 Das Programm wurde komplett in der Programmiersprache C geschrieben. Die Game Library Allegro 5.1 wurde für die grafische und audiovisuelle Umsetzung, sowie für das Keyboard- und Event-Handling verwendent. Es muss Allegro 5.1 auf dem System installiert sein.
 
@@ -73,17 +75,17 @@ Das Programm wurde komplett in der Programmiersprache C geschrieben. Die Game Li
 
 \pagebreak
 
-##benötigte Allegro-Komponenten
+###benötigte Allegro-Komponenten
 
 ```c
-  #include <stdio.h>
-  #include <allegro5/allegro.h>
-  #include <allegro5/allegro_primitives.h>
-  #include <allegro5/allegro_font.h>
-  #include <allegro5/allegro_image.h>
-  #include <allegro5/allegro_ttf.h>
-  #include <allegro5/allegro_audio.h>
-  #include <allegro5/allegro_acodec.h>
+#include <stdio.h>
+#include <allegro5/allegro.h>
+#include <allegro5/allegro_primitives.h>
+#include <allegro5/allegro_font.h>
+#include <allegro5/allegro_image.h>
+#include <allegro5/allegro_ttf.h>
+#include <allegro5/allegro_audio.h>
+#include <allegro5/allegro_acodec.h>
 ```
 
 ##Aufbau des Level-Files
@@ -114,8 +116,53 @@ rrgggggggggrr
 ggggggggggggg
 ~~~~~~~
 
-##Builds und Platform
-Das Programm wurde auf einem Mac OS X Sierra entwickelt und getestet. Ein statisches binary des Programms steht zur Verfügung.
+\pagebreak
+
+##Spielobjekte
+
+###Bar (Spieler) (definiert in gamescene.h)
+```c
+typedef struct {
+  double x;
+  double y;
+  int directionX;
+  int width;
+  int height;
+} Bar;
+```
+
+###Obstacle (Steine) (definiert in gamescene.h)
+```c
+typedef struct {
+  int indexX;
+  int indexY;
+  int width;
+  int height;
+  double x;
+  double y;
+  bool enabled;
+  char color;
+} Obstacle;
+```
+
+###Ball (Spielball) (definiert in gamescene.h)
+```c
+typedef struct {
+  double x;
+  double y;
+  int directionX;
+  int directionY;
+  int width;
+  int height;
+} Ball;
+```
+
+\pagebreak
+
+#Builds und Platform
+
+##Test-Environment
+Das Programm wurde auf einem Mac OS X Sierra entwickelt und getestet. Ein statisches binary des Programms steht zur Verfügung. (kompatibel ab Mac OS X Lion (10.7))
 
 ##Retina Einstellung
 Es ist zu beachten, dass der Build für Retina optimiert ist. Um einen Nicht-Retina-Build zu erstellen, muss im *src/constants.h* der Skalierfaktor von 2 auf 1 geändert werden
@@ -136,5 +183,9 @@ Es ist zu beachten, dass der Build für Retina optimiert ist. Um einen Nicht-Ret
 ##Schlusswort
 Die Entwicklung dieses Computerprogrammes bereitete uns viel Freude. Nicht oft hat man die Möglichkeit so etwas zu entwickeln. Obwohl die C-Erfahrung sehr eingerostet war, war es uns relativ schnell gelungen, ein Spiel auf basis einer Dritten-Library zu realisieren. 
 
-
+#Weiterführende Links
+ Titel                | URL
+--------------------- | ------------------------------------------
+Allegro Library       | <http://liballeg.org>
+Breakout Repository   | <https://github.com/aduersteler/breakout>
 

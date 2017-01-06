@@ -5,6 +5,7 @@ cd src
 # Static Linking
 
 gcc \
+-mmacosx-version-min=10.7 \
 -Wall \
 -flto \
 -Os \
